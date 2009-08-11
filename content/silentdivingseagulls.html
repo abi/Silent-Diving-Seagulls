@@ -1,0 +1,247 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+  "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+  <title>Silent Diving Seagulls</title>
+  <script src="resource://silentdivingseagulls/content/js/ext/jquery.js"></script>
+  <script type="application/javascript;version=1.7" src="chrome://xmpp4moz/content/xmpp.js"/>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <meta http-equiv="Content-Language" content="en-us"/>
+  <link rel="icon" type="image/jpg" href="resource://silentdivingseagulls/content/images/icon.jpg" />
+</head>
+<body>
+  
+  <script type="text/javascript" charset="utf-8">
+  </script>
+  
+  <style type="text/css" media="screen">
+    body{
+      font-family: "Helvetica Neue", "Optima", "Century Gothic", "Cambria", Georgia, sans-serif;
+      background:white;
+      color:#000;
+      letter-spacing:0px;
+    }
+    
+    #wrap{
+      width:900px;
+    }
+    
+    #col1{
+      width:400px;
+      margin-top:50px;
+      text-align:left;
+      margin-left:50px;
+      float:left;
+
+    }
+    
+    #col2{
+      margin-top:224px;
+      width:400px;
+      float:right;
+    }
+    
+    h1{
+      margin-bottom:30px;
+      font-size:32px;
+      letter-spacing:-1px;
+    }
+    
+    #footer{
+      margin-top:70px;
+      text-align:left;
+      color:#999;
+    }
+    
+    a{
+      text-decoration: none;
+      color:inherit;
+    }
+    
+    p{
+      font-size:13px;
+      margin:auto;
+      line-height:1.6em;
+      margin-bottom:20px;
+    }
+    
+    p a{
+      border-bottom: 1px solid #999;
+    }
+    
+    dd{
+      padding-left:0px;
+      margin-left:0px;
+    }
+    
+    input[type="text"], input[type="password"]{
+      width:300px;
+    }
+    
+    dt{
+      margin:10px 0px;
+    }
+    
+    .hint{
+      color:#999;
+      font-size:0.7em;
+      padding-left:5px;
+    }
+    
+    input[type="button"]{ 
+        font-weight:bold;
+    }
+  
+    #status{
+      margin-bottom:40px;
+      font-weight:bold;
+      
+    }
+    
+  </style>
+    
+  <div id="wrap">
+    <div id="col1">
+        <img src="resource://silentdivingseagulls/content/images/icon.jpg" />
+        <h1>Silent Diving Seagulls</h1>
+      
+        <p>Silent Diving Seagulls is a prototype of a XMPP interface for desktop notifications systems such as Growl, Snarl, libnotify, etc. If you don't know what that means, you probably shouldn't be using this. You can read more about it <a href="http://blog.abi.sh/2009/silent-diving-seagulls/">here</a>. 
+        </p>
+        <p>
+          Silent Diving Seagulls was created by <a href="http://www.abi.sh">Abi</a> and the icon is based off a Creative-Commons licensed <a href="http://www.flickr.com/photos/clookypics/443568489/">picture</a> by Flickr user clooky. The source code is available on <a href="http://github.com/abi/Silent-Diving-Seagulls/tree/master">GitHub</a>.
+        </p>
+        <div class="new-info">
+          <p>Silent Diving Seagulls supports Growl on Mac, <a href="http://www.fullphat.net/index.php">Snarl</a> and <a href="http://growlforwindows.com/gfw/">Growl for Windows</a>. If you have Snarl installed and running, Silent Diving Seagulls will automatically use it to send notifications.</p>
+          <p>To get <a href="http://www.markshuttleworth.com/archives/265">libnotify notifications</a> working on Linux, you need to install libnotify-bin using the Synaptic Package Manager on Ubuntu or run "sudo aptitude install libnotify-bin" for all distros.<br></p>
+        </div>
+    </div>
+  
+    <div id="col2">
+      
+      <div id="status">
+        Login on Startup : <input type='checkbox' name='startup' value='startup' id='startup' />
+      </div>
+      
+      <form>
+        <dl>
+          <dt><label for="jabberid">JabberID <span class="hint">(like "abi" without "@")</span></label></dt>
+          <dd><input type="text" name="jabberid" value="" id="jabberid"></dd>
+          <dt>
+          <label for="domain">Domain <span class="hint">(like "gmail.com" or "jabber.org")</span></label></dt><dd><input type="text" name="domain" value="" id="domain"></dd>
+          <dt>
+            <label for="password">Password</label>
+          </dt>
+          <dd>
+            <input type="password" name="password" value="" id="password">
+          </dd>
+          <dt>
+            <input type="button" name="login" value="Login" id="login" />
+          </dt>
+        </dl>
+      </form>
+    </div>
+  </div>
+  
+  <script type="text/javascript" charset="utf-8">
+    const Ci = Components.interfaces;
+    const Cc = Components.classes;
+    
+    var osString = Cc["@mozilla.org/xre/app-info;1"]
+                   .getService(Ci.nsIXULRuntime).OS;
+    var Application = Cc["@mozilla.org/fuel/application;1"]
+                     .getService(Ci.fuelIApplication);
+    var GFW_PREF = "extensions.silentdivingseagulls.gfw";
+                   
+    if(osString == "WINNT"){
+      
+      $(".new-info > p:first-child").after("<div><p>If you want to use Growl on Windows, check the box below:</p><p><label for='gfw' style='font-weight:bold;'> Use Growl for Windows </label><input type='checkbox' name='gfw' value='gfw' id='gfw' /></p><p id='gfw-warning' style='display:none;color:#922233'>Make sure Growl for Windows is open. If not, you will not receive any notifications.</p></div>");
+      
+      $(":checkbox").click(function(){
+       if($(this).is(":checked")){
+         Application.prefs.setValue(GFW_PREF, true);
+         $("#gfw-warning").show();
+       }else{
+         Application.prefs.setValue(GFW_PREF, false);
+         $("#gfw-warning").hide();
+       }
+      });
+      
+      if(Application.prefs.getValue(GFW_PREF, false)){
+        $("#gfw").attr("checked", "true");
+        $("#gfw-warning").show();
+      }
+      
+    }
+    
+    
+    function login(){
+      
+      var mainWindow = window.QueryInterface(Components.interfaces.nsIInterfaceRequestor)
+                         .getInterface(Components.interfaces.nsIWebNavigation)
+                         .QueryInterface(Components.interfaces.nsIDocShellTreeItem)
+                         .rootTreeItem
+                         .QueryInterface(Components.interfaces.nsIInterfaceRequestor)
+                         .getInterface(Components.interfaces.nsIDOMWindow); 
+                               
+      var jid = $("#jabberid").val() + "@" + $("#domain").val();
+      var password = $("#password").val();
+            
+      mainWindow.gSilentdivingseagulls.notifyUser("Attempting to connect with Jabber ID " + jid);
+      
+      var account = {jid:  jid + "/SilentDivingSeagulls", password: password};
+
+      //Let's save the username/password in the login manager
+      var host = "chrome://silentdivingseagulls";
+      var formSubmitURL = host + "/" + jid;
+      var loginManager = Cc["@mozilla.org/login-manager;1"]
+                           .getService(Ci.nsILoginManager);
+      var httprealm = null;
+
+      try {
+          var nsLoginInfo = new Components.Constructor(
+                              "@mozilla.org/login-manager/loginInfo;1",
+                               Ci.nsILoginInfo,
+                               "init");
+          
+          //TODO: Allow login to be modified
+          
+          var loginInfo = new nsLoginInfo(host, formSubmitURL, null, 
+                                          jid, password, "username", "password");
+          loginManager.addLogin(loginInfo);
+          
+      }
+      catch (e) {}
+      
+      var USERNAME_PREF = "extensions.silentdivingseagulls.username";
+      Application.prefs.setValue(USERNAME_PREF, jid);
+      
+      var mainWindow = window.QueryInterface(Components.interfaces.nsIInterfaceRequestor)
+                         .getInterface(Components.interfaces.nsIWebNavigation)
+                         .QueryInterface(Components.interfaces.nsIDocShellTreeItem)
+                         .rootTreeItem
+                         .QueryInterface(Components.interfaces.nsIInterfaceRequestor)
+                         .getInterface(Components.interfaces.nsIDOMWindow); 
+      mainWindow.gSilentdivingseagulls.startXMPP(jid, password);
+    }
+    
+    $("#login").click(login);
+        
+    var STARTUP_PREF = "extensions.silentdivingseagulls.startup";
+    
+    $("#startup:checkbox").click(function(){
+     if($(this).is(":checked")){
+       Application.prefs.setValue(STARTUP_PREF, true);
+     }else{
+       Application.prefs.setValue(STARTUP_PREF, false);
+     }
+    });
+    
+    $(window).load(function(){
+      if(Application.prefs.getValue(STARTUP_PREF, true)){
+        $("#startup:checkbox").attr("checked","true");
+      }
+    });
+    
+  </script>
+</body>
+</html>

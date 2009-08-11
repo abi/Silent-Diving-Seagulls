@@ -1,0 +1,3 @@
+resource silentdivingseagulls ./
+content silentdivingseagulls content/
+overlay chrome://browser/content/browser.xul chrome://silentdivingseagulls/content/browser.xul
